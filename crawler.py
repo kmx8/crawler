@@ -96,18 +96,19 @@ def crawler(seedURLs, relatedTerms):
             continue
         termCount = 0
         pageMainText = get_page_content(url)
+        terms = list()
         for term in relatedTerms:
             if match(term, page_text):
+                terms.append(term)
                 termCount += 1
-                if termCount >= 3:
+                if termCount >= 4:
                     pageTitle = soup.title.string
-                    savePath = Path(folder+pageTitle)
+                    savePath = Path(folder+pageTitle+".txt")
                     #save(page_text, pageTitle)
                     save(page_text, savePath)
                     savedURLs.append(url)
                     pageCount += 1
-                    #print("page#: " + str(pageCount) + " | termCount: "+ str(termCount) + " | url: "+reformat_url(url))
-                    print("page#: %-4i | termCount: %i | url: %s" % (pageCount, termCount, reformat_url(url)))
+                    print("page#: %03i | url: %-100s | Terms: %s, %s, %s, %s" % (pageCount, reformat_url(url), terms[0], terms[1], terms[2], terms[3]))
                     break
         if pageCount >= 500:
             break
@@ -123,8 +124,10 @@ def crawler(seedURLs, relatedTerms):
         txt.write("%s\n"%(page))
     txt.close()
 
-seeds = ["https://en.wikipedia.org/wiki/Weight_training", "https://en.wikipedia.org/wiki/Bodybuilding"]
-related = ["lift", "bench", "squat", "deadlift", "lbs", "hypertrophy", "muscle", "fit", "olympic", "exercise"]
+#seeds = ["https://en.wikipedia.org/wiki/Weight_training", "https://en.wikipedia.org/wiki/Bodybuilding"]
+#related = ["dumbbell", "bench", "barbell", "deadlift", "lbs", "hypertrophy", "muscle", "strength", "supplement", "protein"]
+seeds = ["https://en.wikipedia.org/wiki/Olympic_Games", "https://en.wikipedia.org/wiki/Ancient_Olympic_Games"]
+related = ["olympics", "race", "swimming", "competition", "speed", "training", "drugs", "medal", "torch", "marathon", "biking", "athlete", "athletics", "sport"]
 crawler(seeds, related)
 
 #content=get_page_content(seeds[0])
